@@ -1,8 +1,8 @@
 {
-  "name": "teahub-welcome",
+  "name": "teahub-welcome-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn index.ts",
     "start": "pm2 start index.ts --name teahub --interpreter=node_modules/.bin/ts-node"
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
-    "@types/node": "^10.5.2"
+    "@types/node": "^10.5.2",
+    "ts-node": "^7.0.0"
   }
 }
