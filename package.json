@@ -1,0 +1,24 @@
+{
+  "name": "teahub-welcome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn index.ts",
+    "start": "pm2 start index.ts --name teahub --interpreter=node_modules/.bin/ts-node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^6.0.1",
+    "node-fetch": "^2.1.2",
+    "node-telegram-bot-api": "^0.30.0",
+    "ts-node-dev": "^1.0.0-pre.26",
+    "typescript": "^2.9.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.4",
+    "@types/node": "^10.5.2"
+  }
+}
