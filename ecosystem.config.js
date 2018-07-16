@@ -6,7 +6,7 @@ module.exports = {
   apps : [
     // First application
     {
-      name      : 'teahub',
+      name      : 'teahub-dev',
       script    : 'index.ts',
       interpreter: 'node_modules/.bin/ts-node',
       env: {
@@ -26,7 +26,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:gerkirill/teahub-welcome-bot.git',
       path : '/home/ubuntu/teahub-welcome-bot-dev',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
+      'post-deploy' : 'export NVM_DIR="$HOME/.nvm" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && npm install && pm2 startOrRestart ecosystem.config.js --env production'
     }/*,
     dev : {
       user : 'node',
