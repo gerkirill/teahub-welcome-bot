@@ -21,7 +21,7 @@ module.exports = {
    */
   deploy : {
     production : {
-      user : 'node',
+      user : 'ubuntu',
       host : 'moydomen.com',
       ref  : 'origin/master',
       repo : 'git@github.com:gerkirill/teahub-welcome-bot.git',
