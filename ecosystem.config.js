@@ -6,7 +6,7 @@ module.exports = {
   apps : [
     // First application
     {
-      name      : 'teahub-dev',
+      name      : 'teahub-prod',
       script    : 'index.ts',
       interpreter: 'node_modules/.bin/ts-node',
       env: {
@@ -25,7 +25,7 @@ module.exports = {
       host : 'moydomen.com',
       ref  : 'origin/master',
       repo : 'git@github.com:gerkirill/teahub-welcome-bot.git',
-      path : '/home/ubuntu/teahub-welcome-bot-dev',
+      path : '/home/ubuntu/teahub-welcome-bot-prod',
       'post-deploy' :'[ -s $HOME/.nvm/nvm.sh ] && \. $HOME/.nvm/nvm.sh && npm install && pm2 startOrRestart ecosystem.config.js --env production',
       env  : {
         NODE_ENV: 'production'

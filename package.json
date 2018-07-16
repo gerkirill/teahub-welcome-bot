@@ -5,7 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn index.ts",
-    "start": "pm2 start index.ts --name teahub --interpreter=node_modules/.bin/ts-node"
+    "start": "pm2 start index.ts --name teahub --interpreter=node_modules/.bin/ts-node",
+    "setup": "pm2 deploy production setup",
+    "deploy": "pm2 deploy production"
   },
   "keywords": [],
   "author": "",
