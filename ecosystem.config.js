@@ -26,7 +26,10 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:gerkirill/teahub-welcome-bot.git',
       path : '/home/ubuntu/teahub-welcome-bot-dev',
-      'post-deploy' : 'export NVM_DIR="$HOME/.nvm" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && npm install && pm2 startOrRestart ecosystem.config.js --env production'
+      'post-deploy' :'[ -s $HOME/.nvm/nvm.sh ] && \. $HOME/.nvm/nvm.sh && npm install && pm2 startOrRestart ecosystem.config.js --env production',
+      env  : {
+        NODE_ENV: 'production'
+      }
     }/*,
     dev : {
       user : 'node',
