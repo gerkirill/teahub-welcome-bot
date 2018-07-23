@@ -51,7 +51,7 @@ bot.onText(/\/who/, (msg) => {
   const inOfficeStr = EMPLOYEES.filter((emp) => today.employees.includes(emp.id))
     .map((emp) => emp.name)
     .join(', ');
-  bot.sendMessage(msg.chat.id, (inOfficeStr || 'Никого нет') + ' в офисе.');
+  bot.sendMessage(msg.chat.id, inOfficeStr ? `Были замечены в офисе: ${inOfficeStr}` : 'Пока никто в офис не приходил.');
 });
 
 async function main() {
