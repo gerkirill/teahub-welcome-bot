@@ -90,7 +90,7 @@ async function main() {
       fs.writeJsonSync(TODAY_CACHE_FILE, today);
     });
   } catch (e) {
-    console.exception(e);
+    console.error(e);
   }
   setTimeout(main, IDLE_INTERVAL);
 }
