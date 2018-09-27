@@ -89,7 +89,9 @@ async function main() {
       today.employees.push(resp.employee.id);
       fs.writeJsonSync(TODAY_CACHE_FILE, today);
     });
-  } catch (e) { }
+  } catch (e) {
+    console.exception(e);
+  }
   setTimeout(main, IDLE_INTERVAL);
 }
 
