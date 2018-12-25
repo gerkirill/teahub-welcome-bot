@@ -11,6 +11,7 @@ const CHAT_ID = config.chatId;
 
 const IDLE_INTERVAL_MINUTES = 1;
 const IDLE_INTERVAL = IDLE_INTERVAL_MINUTES * 60 * 1000;
+const OFFICE_TIME_TIMEOUT = 10 * 1000;
 const TODAY_CACHE_FILE = path.join(__dirname, 'data', 'today.json');
 
 const EMPLOYEES = [
@@ -53,7 +54,7 @@ try {
 
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
-bot.onText(/\/who/, (msg) => {
+bot.onText(/\/who/, msg => {
   const inOfficeStr = EMPLOYEES.filter((emp) => today.employees.includes(emp.id))
     .map((emp) => emp.name)
     .join(', ');
@@ -72,8 +73,16 @@ async function main() {
 
     const responses = await Promise.all(
       onesToCheck.map(async employee => {
-        const resp = await fetch(`https://portal-ua.globallogic.com/officetime/json/events.php?zone=ODS&employeeId=${employee.id}&from=${from}&till=${till}`, { headers: { Authorization: `Basic ${API_TOKEN}` } });
-        const json = await resp.json();
+        var json = [];
+        try {
+          const resp = await fetch(
+            `https://portal-ua.globallogic.com/officetime/json/events.php?zone=ODS&employeeId=${employee.id}&from=${from}&till=${till}`,
+            { headers: { Authorization: `Basic ${API_TOKEN}` }, timeout: OFFICE_TIME_TIMEOUT },
+          );
+          json = await resp.json();
+        } catch (err) {
+          console.error(`Error querying office time with timeout ${OFFICE_TIME_TIMEOUT}: ` + err);
+        }
         // const json = JSON.parse('[{"timestamp":"2018\/07\/09 08:46:33","locationid":16,"direction":"in","area":"ODS4","working":true},{"timestamp":"2018\/07\/09 09:41:07","locationid":17,"direction":"out","area":"ODS4","working":true}]');
         return { employee: employee, atWork: json.some(record => record.direction == 'in') };
       })
