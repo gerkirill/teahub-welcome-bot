@@ -5,6 +5,14 @@ import * as path from 'path';
 // -1001156466676
 import { config } from './config';
 
+class FetchStatusError extends Error {
+  response: any
+}
+
+enum OfficeTimeZone {
+  ODS = 'ODS'
+}
+
 const BOT_TOKEN = config.botToken;
 const API_TOKEN = config.apiToken
 const CHAT_ID = config.chatId;
@@ -73,18 +81,14 @@ async function main() {
 
     const responses = await Promise.all(
       onesToCheck.map(async employee => {
-        var json = [];
+        var events = [];
         try {
-          const resp = await fetch(
-            `https://portal-ua.globallogic.com/officetime/json/events.php?zone=ODS&employeeId=${employee.id}&from=${from}&till=${till}`,
-            { headers: { Authorization: `Basic ${API_TOKEN}` }, timeout: OFFICE_TIME_TIMEOUT },
-          );
-          json = await resp.json();
+          events = await fetchOfficeTimeEvents(OfficeTimeZone.ODS, employee.id, from, till, API_TOKEN, OFFICE_TIME_TIMEOUT);
         } catch (err) {
-          console.error(`Error querying office time with timeout ${OFFICE_TIME_TIMEOUT}: ` + err);
+          console.error(`Error obtaining user events from the Office Time: ` + err);
         }
         // const json = JSON.parse('[{"timestamp":"2018\/07\/09 08:46:33","locationid":16,"direction":"in","area":"ODS4","working":true},{"timestamp":"2018\/07\/09 09:41:07","locationid":17,"direction":"out","area":"ODS4","working":true}]');
-        return { employee: employee, atWork: json.some(record => record.direction == 'in') };
+        return { employee: employee, atWork: events.some(record => record.direction == 'in') };
       })
     );
     responses.filter(resp => resp.atWork).forEach(resp => {
@@ -105,3 +109,25 @@ async function main() {
 }
 
 main();
+
+async function fetchOfficeTimeEvents(
+  zone: OfficeTimeZone,
+  employeeId: number,
+  fromTime: number,
+  tillTime: number,
+  basicAuthToken: string,
+  timeout: number
+  ) {
+  const resp = await fetch(
+    `https://portal-ua.globallogic.com/officetime/json/events.php?` + 
+    `zone=${zone}&employeeId=${employeeId}&from=${fromTime}&till=${tillTime}`,
+    { headers: { Authorization: `Basic ${basicAuthToken}` }, timeout: timeout },
+  );
+  const respText = await resp.text();
+  if (!resp.ok) {
+    const err = new FetchStatusError('response was not OK. Status:' + resp.status +' Text:' + respText);
+    err.response = resp;
+    throw err;
+  }
+  return JSON.parse(respText);
+}
