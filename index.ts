@@ -9,6 +9,10 @@ class FetchStatusError extends Error {
   response: any
 }
 
+class OfficeTimeUnauthorizedError extends Error {
+
+}
+
 enum OfficeTimeZone {
   ODS = 'ODS'
 }
@@ -86,6 +90,7 @@ async function main() {
           events = await fetchOfficeTimeEvents(OfficeTimeZone.ODS, employee.id, from, till, API_TOKEN, OFFICE_TIME_TIMEOUT);
         } catch (err) {
           console.error(`Error obtaining user events from the Office Time: ` + err);
+          if (err instanceof FetchStatusError && err.response.status === 401) throw new OfficeTimeUnauthorizedError();
         }
         // const json = JSON.parse('[{"timestamp":"2018\/07\/09 08:46:33","locationid":16,"direction":"in","area":"ODS4","working":true},{"timestamp":"2018\/07\/09 09:41:07","locationid":17,"direction":"out","area":"ODS4","working":true}]');
         return { employee: employee, atWork: events.some(record => record.direction == 'in') };
@@ -104,6 +109,10 @@ async function main() {
     });
   } catch (e) {
     console.error(e);
+    if (e instanceof OfficeTimeUnauthorizedError) {
+      console.error('Office Time returns 401 Unauthorized. Terminating to avoid account lock.');
+      return;
+    }
   }
   setTimeout(main, IDLE_INTERVAL);
 }
