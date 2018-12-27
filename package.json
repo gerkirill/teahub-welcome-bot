@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn index.ts",
     "start": "pm2 start index.ts --name teahub --interpreter=node_modules/.bin/ts-node",
+    "stop": "pm2 stop teahub",
     "setup": "pm2 deploy production setup",
     "deploy": "pm2 deploy production"
   },
