@@ -27,8 +27,8 @@ const OFFICE_TIME_TIMEOUT = 10 * 1000;
 const TODAY_CACHE_FILE = path.join(__dirname, 'data', 'today.json');
 
 const EMPLOYEES = [
-  { id: 190, name: 'Кирилл', special: true },
-  { id: 330, name: 'Таня', special: false },
+  { id: 190, name: 'Кирилл', special: false },
+  { id: 330, name: 'Татьяна', special: true },
   { id: 403, name: 'Денис', special: false },
   { id: 331, name: 'Максим', special: false },
   { id: 258, name: 'Тарас', special: false },
