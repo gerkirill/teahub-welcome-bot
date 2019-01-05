@@ -2,7 +2,7 @@
 
 The bot which says "hello" to all the _TeaHUB_ telegram group members, once they enter the office.
 
-Uses _office time_ application on behalf of the authorized user to access the office entry events for the other people.
+Uses _office time_ application on behalf of the authorized user to access the office entry events for the other people. Also, supports `/who` command which lists chat members who entered office today (that does _not_ mean chat member is _currently_ in the office though). 
 
 ## Setup
 
