@@ -13,13 +13,15 @@ class OfficeTimeUnauthorizedError extends Error {
 
 }
 
-enum OfficeTimeZone {
-  ODS = 'ODS'
+enum OfficeLocation {
+  ODS = 'ODS',
+  KBP = 'KBP',
+  HRK = 'HRK'
 }
 
-const BOT_TOKEN = config.botToken;
-const API_TOKEN = config.apiToken
-const CHAT_ID = config.chatId;
+const BOT_TOKEN: string = config.botToken;
+const API_TOKEN: string = config.apiToken
+const CHAT_ID: string = config.chatId;
 
 const IDLE_INTERVAL_MINUTES = 1;
 const IDLE_INTERVAL = IDLE_INTERVAL_MINUTES * 60 * 1000;
@@ -87,7 +89,7 @@ async function main() {
       onesToCheck.map(async employee => {
         var events = [];
         try {
-          events = await fetchOfficeTimeEvents(OfficeTimeZone.ODS, employee.id, from, till, API_TOKEN, OFFICE_TIME_TIMEOUT);
+          events = await fetchOfficeTimeEvents(OfficeLocation.ODS, employee.id, from, till, API_TOKEN, OFFICE_TIME_TIMEOUT);
         } catch (err) {
           console.error(`Error obtaining user events from the Office Time: ` + err);
           if (err instanceof FetchStatusError && err.response.status === 401) throw new OfficeTimeUnauthorizedError();
@@ -120,7 +122,7 @@ async function main() {
 main();
 
 async function fetchOfficeTimeEvents(
-  zone: OfficeTimeZone,
+  zone: OfficeLocation,
   employeeId: number,
   fromTime: number,
   tillTime: number,
