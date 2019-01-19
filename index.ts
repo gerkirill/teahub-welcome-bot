@@ -82,5 +82,6 @@ async function main() {
   setTimeout(main, IDLE_INTERVAL);
 }
 
+console.log('Bot started.')
 main();
 
