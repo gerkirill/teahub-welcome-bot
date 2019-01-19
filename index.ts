@@ -8,6 +8,8 @@ import {
   PassDirection, OfficeTimeUnauthorizedError 
 } from 'gl-office-time-api';
 
+import { EMPLOYEES } from './employees';
+import { JOKES } from './jokes';
 import { config } from './config';
 
 const BOT_TOKEN: string = config.botToken;
@@ -19,36 +21,6 @@ const IDLE_INTERVAL = IDLE_INTERVAL_MINUTES * 60 * 1000;
 const OFFICE_TIME_TIMEOUT = 10 * 1000;
 const TODAY_CACHE_FILE = path.join(__dirname, 'data', 'today.json');
 
-const EMPLOYEES = [
-  { id: 190, name: 'Кирилл', special: false },
-  { id: 330, name: 'Татьяна', special: true },
-  { id: 403, name: 'Денис', special: false },
-  { id: 331, name: 'Максим', special: false },
-  { id: 258, name: 'Тарас', special: false },
-  { id: 371, name: 'Света', special: true },
-  { id: 388, name: 'Саша', special: false },
-  { id: 313, name: 'Наташа', special: false },
-  { id: 96, name: 'Алёнка', special: false },
-  { id: 315, name: 'Алёна', special: false },
-  { id: 370, name: 'Маша', special: false },
-];
-const JOKES = [
-  'Очешуеть!',
-  'Это шо ж такое творится?',
-  'Ви таки не повегите...',
-  'Мечты сбываются.', 
-  'Сначала Плутон – не планета, а тут и',
-  'Сохраняйте спокойствие,',
-  'Чувствуете, как всё изменилось? Это потому, что',
-  'Грабьте караваны, не щадите гусей, ведь',
-  'Всё страньше и страньше, всё чудесатее и чудесатее. Вот и',
-  'Никогда такого не было, и вот опять:',
-  'Ёбышки-воробышки..',
-  'ААААААААААА!',
-  'Нет слов.',
-  'Ой всё.',
-  'Вжу-у-у-у-у-х! и..'
-];
 let today = {
   date: 0,
   employees: <number[]>[]
