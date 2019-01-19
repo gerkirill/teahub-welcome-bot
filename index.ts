@@ -1,23 +1,14 @@
-import * as fetch from 'node-fetch';
 import * as  TelegramBot from 'node-telegram-bot-api';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 // -1001156466676
+
+import {
+  fetchOfficeTimeEvents, OfficeLocation, OfficeTimeEvent,
+  PassDirection, OfficeTimeUnauthorizedError 
+} from 'gl-office-time-api';
+
 import { config } from './config';
-
-class FetchStatusError extends Error {
-  response: any
-}
-
-class OfficeTimeUnauthorizedError extends Error {
-
-}
-
-enum OfficeLocation {
-  ODS = 'ODS',
-  KBP = 'KBP',
-  HRK = 'HRK'
-}
 
 const BOT_TOKEN: string = config.botToken;
 const API_TOKEN: string = config.apiToken
@@ -60,7 +51,7 @@ const JOKES = [
 ];
 let today = {
   date: 0,
-  employees: []
+  employees: <number[]>[]
 };
 try {
   today = fs.readJsonSync(TODAY_CACHE_FILE);
@@ -87,15 +78,15 @@ async function main() {
 
     const responses = await Promise.all(
       onesToCheck.map(async employee => {
-        var events = [];
+        var events: OfficeTimeEvent[] = [];
         try {
           events = await fetchOfficeTimeEvents(OfficeLocation.ODS, employee.id, from, till, API_TOKEN, OFFICE_TIME_TIMEOUT);
         } catch (err) {
           console.error(`Error obtaining user events from the Office Time: ` + err);
-          if (err instanceof FetchStatusError && err.response.status === 401) throw new OfficeTimeUnauthorizedError();
+          if (err instanceof OfficeTimeUnauthorizedError) throw err;
         }
         // const json = JSON.parse('[{"timestamp":"2018\/07\/09 08:46:33","locationid":16,"direction":"in","area":"ODS4","working":true},{"timestamp":"2018\/07\/09 09:41:07","locationid":17,"direction":"out","area":"ODS4","working":true}]');
-        return { employee: employee, atWork: events.some(record => record.direction == 'in') };
+        return { employee: employee, atWork: events.some(record => record.direction === PassDirection.in) };
       })
     );
     responses.filter(resp => resp.atWork).forEach(resp => {
@@ -121,24 +112,3 @@ async function main() {
 
 main();
 
-async function fetchOfficeTimeEvents(
-  zone: OfficeLocation,
-  employeeId: number,
-  fromTime: number,
-  tillTime: number,
-  basicAuthToken: string,
-  timeout: number
-  ) {
-  const resp = await fetch(
-    `https://portal-ua.globallogic.com/officetime/json/events.php?` + 
-    `zone=${zone}&employeeId=${employeeId}&from=${fromTime}&till=${tillTime}`,
-    { headers: { Authorization: `Basic ${basicAuthToken}` }, timeout: timeout },
-  );
-  const respText = await resp.text();
-  if (!resp.ok) {
-    const err = new FetchStatusError('response was not OK. Status:' + resp.status +' Text:' + respText);
-    err.response = resp;
-    throw err;
-  }
-  return JSON.parse(respText);
-}
