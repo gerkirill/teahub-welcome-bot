@@ -1,7 +1,7 @@
 export const EMPLOYEES = [
   { id: 190, name: 'Кирилл', special: false },
   { id: 330, name: 'Татьяна', special: true },
-  { id: 403, name: 'Денис', special: false },
+  { id: 377, name: 'Денис', special: false },
   { id: 331, name: 'Максим', special: false },
   { id: 258, name: 'Тарас', special: false },
   { id: 371, name: 'Света', special: true },
